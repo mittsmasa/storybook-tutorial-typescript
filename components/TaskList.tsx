@@ -6,7 +6,7 @@ export interface TaskListProps {
   onPinTask: () => void;
   onArchiveTask: () => void;
 }
-export default function TaskList({ loading = false, tasks, onPinTask, onArchiveTask }: TaskListProps) {
+export const TaskList = ({ loading = false, tasks, onPinTask, onArchiveTask }: TaskListProps) => {
   const events = {
     onPinTask,
     onArchiveTask,
@@ -54,4 +54,4 @@ export default function TaskList({ loading = false, tasks, onPinTask, onArchiveT
       ))}
     </div>
   );
-}
+};

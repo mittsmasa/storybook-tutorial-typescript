@@ -1,17 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-// import '@testing-library/jest-dom/extend-expect';
+import { composeStories } from '@storybook/testing-react';
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import * as stories from './TaskList.stories';
 
-import { WithPinnedTasks } from './TaskList.stories'; //👈  Our story imported here
-
-it('renders pinned tasks at the start of the list', () => {
-  const div = document.createElement('div');
-  //👇 Story's args used with our test
-  ReactDOM.render(<WithPinnedTasks {...WithPinnedTasks.args} />, div);
-
-  // We expect the task titled "Task 6 (pinned)" to be rendered first, not at the end
-  const lastTaskInput = div.querySelector('.list-item:nth-child(1) input[value="Task 6 (pinned)"]');
-  expect(lastTaskInput).not.toBe(null);
-
-  ReactDOM.unmountComponentAtNode(div);
+describe('TaskList', () => {
+  const { WithPinnedTasks } = composeStories(stories);
+  test('renders pinned tasks at the start of the list', () => {
+    const pinnedTitle = WithPinnedTasks.args!.tasks![5].title; // "Task 6 (pinned)"
+    render(<WithPinnedTasks />);
+    const values = screen.getAllByDisplayValue(/^Task/);
+    expect(values).toHaveLength(6);
+    expect(screen.getByDisplayValue(pinnedTitle)).toBeInTheDocument();
+    expect((values[0] as HTMLInputElement).value).toBe(pinnedTitle);
+  });
 });
